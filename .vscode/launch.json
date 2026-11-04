@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Server: Launch (debug)",
+      "program": "${workspaceFolder}/server.js",
+      "console": "integratedTerminal",
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"],
+      "env": { "PORT": "3000" }
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "Client: Vite dev server",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/client"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Run Full App (server + client)",
+      "configurations": ["Server: Launch (debug)", "Client: Vite dev server"],
+      "stopAll": true
+    }
+  ]
+}
