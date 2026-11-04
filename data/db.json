@@ -1,0 +1,26 @@
+{
+  "donors": [
+    { "id": "d1", "name": "Arjun Rao", "bloodGroup": "O+", "phone": "9876500001", "city": "Hyderabad", "lat": 17.3850, "lng": 78.4867, "status": "available", "lastDonation": "2026-05-12", "donations": 4 },
+    { "id": "d2", "name": "Priya Nair", "bloodGroup": "O-", "phone": "9876500002", "city": "Hyderabad", "lat": 17.4065, "lng": 78.4772, "status": "available", "lastDonation": "2026-07-01", "donations": 7 },
+    { "id": "d3", "name": "Vikram Singh", "bloodGroup": "A+", "phone": "9876500003", "city": "Hyderabad", "lat": 17.3616, "lng": 78.4747, "status": "unavailable", "lastDonation": "2026-08-10", "donations": 2 },
+    { "id": "d4", "name": "Sneha Reddy", "bloodGroup": "B+", "phone": "9876500004", "city": "Hyderabad", "lat": 17.4400, "lng": 78.3489, "status": "available", "lastDonation": "2026-03-22", "donations": 5 },
+    { "id": "d5", "name": "Karan Mehta", "bloodGroup": "AB+", "phone": "9876500005", "city": "Bengaluru", "lat": 12.9716, "lng": 77.5946, "status": "available", "lastDonation": "2026-06-18", "donations": 3 },
+    { "id": "d6", "name": "Divya Iyer", "bloodGroup": "O+", "phone": "9876500006", "city": "Bengaluru", "lat": 12.9352, "lng": 77.6245, "status": "available", "lastDonation": "2026-04-02", "donations": 9 },
+    { "id": "d7", "name": "Rohan Kulkarni", "bloodGroup": "A-", "phone": "9876500007", "city": "Mumbai", "lat": 19.0760, "lng": 72.8777, "status": "available", "lastDonation": "2026-07-29", "donations": 1 },
+    { "id": "d8", "name": "Anita Desai", "bloodGroup": "B-", "phone": "9876500008", "city": "Mumbai", "lat": 19.1197, "lng": 72.9051, "status": "unavailable", "lastDonation": "2026-08-20", "donations": 6 },
+    { "id": "d9", "name": "Farhan Ali", "bloodGroup": "O-", "phone": "9876500009", "city": "Chennai", "lat": 13.0827, "lng": 80.2707, "status": "available", "lastDonation": "2026-02-14", "donations": 8 },
+    { "id": "d10", "name": "Meera Pillai", "bloodGroup": "AB-", "phone": "9876500010", "city": "Delhi", "lat": 28.7041, "lng": 77.1025, "status": "available", "lastDonation": "2026-05-30", "donations": 2 }
+  ],
+  "requests": [
+    { "id": "r1", "patientName": "Suresh Kumar", "bloodGroup": "O-", "unitsNeeded": 2, "hospital": "Apollo Hospitals, Jubilee Hills", "city": "Hyderabad", "lat": 17.4239, "lng": 78.4738, "urgency": "critical", "contact": "9123456780", "status": "open", "createdAt": "2026-08-28T09:15:00.000Z" },
+    { "id": "r2", "patientName": "Lakshmi Devi", "bloodGroup": "B+", "unitsNeeded": 1, "hospital": "Yashoda Hospitals, Somajiguda", "city": "Hyderabad", "lat": 17.4180, "lng": 78.4560, "urgency": "urgent", "contact": "9123456781", "status": "open", "createdAt": "2026-08-27T14:40:00.000Z" }
+  ],
+  "bloodBanks": [
+    { "id": "b1", "name": "Red Cross Blood Bank", "city": "Hyderabad", "lat": 17.4062, "lng": 78.4691, "phone": "04023456001" },
+    { "id": "b2", "name": "Government Blood Bank, Koti", "city": "Hyderabad", "lat": 17.3833, "lng": 78.4808, "phone": "04023456002" },
+    { "id": "b3", "name": "Rotary Blood Bank", "city": "Bengaluru", "lat": 12.9791, "lng": 77.5913, "phone": "08023456003" },
+    { "id": "b4", "name": "KEM Hospital Blood Bank", "city": "Mumbai", "lat": 19.0016, "lng": 72.8414, "phone": "02223456004" },
+    { "id": "b5", "name": "Government General Hospital Blood Bank", "city": "Chennai", "lat": 13.0836, "lng": 80.2745, "phone": "04423456005" },
+    { "id": "b6", "name": "AIIMS Blood Bank", "city": "Delhi", "lat": 28.5672, "lng": 77.2100, "phone": "01123456006" }
+  ]
+}
