@@ -13,7 +13,9 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../dist",
+    // Vercel builds from the client folder and needs "dist" inside it.
+    // Locally, Express serves the build from the project root's "dist".
+    outDir: process.env.VERCEL ? "dist" : "../dist",
     emptyOutDir: true,
   },
 });

@@ -1,4 +1,6 @@
-const BASE = "/api";
+// In development, Vite proxies /api to Express, so the base is empty.
+// In production on Vercel, set VITE_API_URL to your backend URL (no trailing slash, no /api).
+const BASE = (import.meta.env.VITE_API_URL || "") + "/api";
 
 async function request(path, options = {}) {
   const res = await fetch(BASE + path, {
