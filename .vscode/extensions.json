@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "humao.rest-client",
+    "ritwickdey.liveserver",
+    "christian-kohler.npm-intellisense",
+    "editorconfig.editorconfig"
+  ]
+}
