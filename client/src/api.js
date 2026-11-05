@@ -22,6 +22,9 @@ export const api = {
   registerDonor: (payload) => request("/donors", { method: "POST", body: JSON.stringify(payload) }),
   updateDonor: (id, payload) => request(`/donors/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
 
+  getEligibilityQuestions: () => request("/eligibility/questions"),
+  checkEligibility: (payload) => request("/eligibility/check", { method: "POST", body: JSON.stringify(payload) }),
+
   getRequests: (params = {}) => request(`/requests?${qs(params)}`),
   createRequest: (payload) => request("/requests", { method: "POST", body: JSON.stringify(payload) }),
   updateRequest: (id, payload) => request(`/requests/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
