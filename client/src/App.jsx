@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
 import Register from "./pages/Register.jsx";
 import Search from "./pages/Search.jsx";
+import Eligibility from "./pages/Eligibility.jsx";
 import Emergency from "./pages/Emergency.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 
@@ -14,6 +15,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/eligibility" element={<Eligibility />} />
         <Route path="/search" element={<Search />} />
         <Route path="/emergency" element={<Emergency />} />
         <Route path="/dashboard" element={<Dashboard />} />

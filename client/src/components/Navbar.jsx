@@ -18,6 +18,9 @@ export default function Navbar() {
           <NavLink to="/register" className={({ isActive }) => (isActive ? "active" : "")}>
             Become a Donor
           </NavLink>
+          <NavLink to="/eligibility" className={({ isActive }) => (isActive ? "active" : "")}>
+            Can I Donate?
+          </NavLink>
           <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
             Dashboard
           </NavLink>

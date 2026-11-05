@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api.js";
 import { useToast } from "../components/Toast.jsx";
 import BloodGroupPicker from "../components/BloodGroupPicker.jsx";
@@ -51,7 +51,10 @@ export default function Register() {
         </div>
         <h1 style={{ fontSize: 34, marginBottom: 6 }}>Register as a donor</h1>
         <p style={{ color: "var(--ink-soft)", fontSize: 15, marginBottom: 28 }}>
-          One profile. Every future request in your city can find you.
+          One profile. Every future request in your city can find you.{" "}
+          <Link to="/eligibility" style={{ color: "var(--vital)", fontWeight: 600 }}>
+            Not sure you can donate? Check eligibility first.
+          </Link>
         </p>
 
         <form className="card" onSubmit={handleSubmit}>

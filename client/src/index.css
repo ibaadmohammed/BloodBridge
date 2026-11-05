@@ -276,6 +276,35 @@ textarea { resize: vertical; min-height: 80px; }
 }
 .bg-pill.active { background: var(--blood); border-color: var(--blood); color: #fff; }
 
+/* ---------- Eligibility checker ---------- */
+.check-list { display: flex; flex-direction: column; gap: 8px; }
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 7px;
+  background: var(--paper-alt);
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink);
+  cursor: pointer;
+}
+.check-item input { margin-top: 2px; padding: 0; accent-color: var(--blood); }
+.check-item.checked { border-color: var(--blood); background: #fdf3f3; }
+
+.elig-result { border-left: 6px solid var(--line); }
+.elig-result.eligible { border-left-color: var(--vital); background: var(--vital-soft); }
+.elig-result.deferred { border-left-color: var(--amber); background: var(--amber-soft); }
+.elig-result.not_eligible { border-left-color: var(--blood); background: #fdf3f3; }
+.elig-result-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.elig-result-head h2 { font-size: 22px; }
+.elig-icon { font-size: 26px; line-height: 1; }
+.elig-reasons { margin: 0 0 14px; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+
 /* ---------- Donor / request lists ---------- */
 .donor-list, .request-list { display: flex; flex-direction: column; gap: 12px; }
 .donor-row {

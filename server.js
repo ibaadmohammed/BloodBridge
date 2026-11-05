@@ -3,6 +3,7 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const { checkEligibility, getQuestionnaire } = require("./eligibility");
 
 const DB_PATH = path.join(__dirname, "data", "db.json");
 const DIST_PATH = path.join(__dirname, "dist"); // built React app (npm run build)
@@ -115,6 +116,20 @@ app.delete("/api/donors/:id", (req, res) => {
   db.donors = db.donors.filter((d) => d.id !== req.params.id);
   writeDB(db);
   res.json({ deleted: before !== db.donors.length });
+});
+
+// ================= DONOR ELIGIBILITY =================
+
+// Questionnaire definition (limits + condition lists) so the client renders from the same rules.
+app.get("/api/eligibility/questions", (req, res) => {
+  res.json(getQuestionnaire());
+});
+
+// Stateless check: nothing is stored.
+app.post("/api/eligibility/check", (req, res) => {
+  const result = checkEligibility(req.body);
+  if (result.errors) return res.status(400).json({ error: result.errors.join("; ") });
+  res.json(result);
 });
 
 // ================= EMERGENCY REQUESTS =================
