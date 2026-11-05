@@ -27,7 +27,7 @@ This is the React rewrite of the plain HTML/CSS/JS version, same features and sa
 ## Project structure
 
 ```
-BloodBridge-React/
+BloodBridge/
 ├── server.js               # Express API (same endpoints as the vanilla version)
 ├── package.json              # root: orchestrates server + client via `concurrently`
 ├── data/db.json                # seed + persisted data
@@ -88,9 +88,9 @@ npm start           # Express serves the built app + API from a single port
 ```
 Open **http://localhost:3000** — Express now serves the compiled React app directly, no separate Vite server needed.
 
-## Opening in Windsurf / VS Code
+## Opening in Antigravity / VS Code
 
-1. Open the **`BloodBridge-React`** folder itself as the workspace root.
+1. Open the **`BloodBridge`** folder itself as the workspace root.
 2. Run `npm run install:all` in the integrated terminal.
 3. Use **Run and Debug** → **"Run Full App (server + client)"** — this is a compound launch config that starts the Express server *with the debugger attached* (breakpoints work in `server.js`) alongside the Vite dev server in a terminal.
    - Or just run `npm run dev` from the terminal — same effect, no debugger attached.
