@@ -11,8 +11,8 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-
 import { Doughnut, Line, Bar, Pie } from "react-chartjs-2";
+import "./Analytics.css";
 
 ChartJS.register(
   CategoryScale,
@@ -27,7 +27,6 @@ ChartJS.register(
 );
 
 const Analytics = () => {
-  // Sample data - replace with backend data
   const stats = [
     { title: "Total Donors", value: 250, icon: "👥" },
     { title: "Total Donations", value: 180, icon: "🩸" },
@@ -39,7 +38,7 @@ const Analytics = () => {
     labels: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
     datasets: [
       {
-        data: [45, 12, 35, 8, 15, 5, 40, 10],
+        data: [45, 12, 38, 10, 22, 8, 55, 15],
         backgroundColor: [
           "#dc2626",
           "#f87171",
@@ -73,7 +72,7 @@ const Analytics = () => {
     datasets: [
       {
         label: "Donations",
-        data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 40, 38, 45],
+        data: [12, 18, 15, 22, 25, 20, 28, 30, 24, 26, 32, 35],
         borderColor: "#dc2626",
         backgroundColor: "rgba(220,38,38,0.12)",
         fill: true,
@@ -87,7 +86,7 @@ const Analytics = () => {
     datasets: [
       {
         label: "Requests",
-        data: [15, 52, 8],
+        data: [20, 35, 10],
         backgroundColor: ["#f59e0b", "#16a34a", "#dc2626"],
         borderRadius: 8,
       },
@@ -98,7 +97,7 @@ const Analytics = () => {
     labels: ["Eligible", "Temporarily Ineligible"],
     datasets: [
       {
-        data: [75, 25],
+        data: [200, 50],
         backgroundColor: ["#16a34a", "#dc2626"],
         borderWidth: 2,
       },
@@ -106,72 +105,45 @@ const Analytics = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      {/* Header */}
-      <div className="flex flex-wrap justify-between items-center gap-4 mb-8">
+    <div className="analytics-page">
+      <div className="analytics-header">
         <div>
-          <h1 className="text-3xl font-bold text-red-700">
-            BloodBridge Analytics
-          </h1>
-          <p className="text-gray-500 mt-2">
-            Monitor donors, donations and blood requests.
-          </p>
+          <h1>BloodBridge Analytics</h1>
+          <p>Monitor donors, donations and blood requests.</p>
         </div>
-
-        <span className="bg-red-100 text-red-700 px-4 py-2 rounded-full font-semibold">
-          Admin Dashboard
-        </span>
+        <span className="admin-badge">Admin Dashboard</span>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
+      <div className="stats-grid">
         {stats.map((item, index) => (
-          <div
-            key={index}
-            className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all"
-          >
-            <div className="flex justify-between items-center">
-              <p className="text-gray-500 font-medium">{item.title}</p>
-              <span className="text-2xl">{item.icon}</span>
+          <div key={index} className="stat-card">
+            <div className="stat-top">
+              <p>{item.title}</p>
+              <span>{item.icon}</span>
             </div>
-
-            <h2 className="text-3xl font-bold text-gray-800 mt-4">
-              {item.value}
-            </h2>
+            <h2>{item.value}</h2>
           </div>
         ))}
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-lg font-bold mb-6 text-gray-800">
-            Blood Group Distribution
-          </h2>
-          <div className="max-w-sm mx-auto">
+      <div className="charts-grid">
+        <div className="chart-card">
+          <h2>Blood Group Distribution</h2>
+          <div className="chart-small">
             <Doughnut data={bloodGroups} />
           </div>
         </div>
-
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-lg font-bold mb-6 text-gray-800">
-            Monthly Donation Trends
-          </h2>
+        <div className="chart-card">
+          <h2>Monthly Donation Trends</h2>
           <Line data={donations} />
         </div>
-
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-lg font-bold mb-6 text-gray-800">
-            Blood Request Statistics
-          </h2>
+        <div className="chart-card">
+          <h2>Blood Request Statistics</h2>
           <Bar data={requests} />
         </div>
-
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-lg font-bold mb-6 text-gray-800">
-            Donor Eligibility Statistics
-          </h2>
-          <div className="max-w-sm mx-auto">
+        <div className="chart-card">
+          <h2>Donor Eligibility Statistics</h2>
+          <div className="chart-small">
             <Pie data={eligibility} />
           </div>
         </div>
