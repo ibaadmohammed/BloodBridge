@@ -7,6 +7,7 @@ import Search from "./pages/Search.jsx";
 import Eligibility from "./pages/Eligibility.jsx";
 import Emergency from "./pages/Emergency.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import Analytics from "./components/Analytics";
 
 export default function App() {
   return (
@@ -20,13 +21,18 @@ export default function App() {
         <Route path="/emergency" element={<Emergency />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<Home />} />
+        <Route path="/analytics" element={<Analytics />} />
       </Routes>
       <footer>
         <div className="container">
           <span>
-            <span className="drop" style={{ width: 10, height: 10 }}></span> BloodBridge
+            <span className="drop" style={{ width: 10, height: 10 }}></span>{" "}
+            BloodBridge
           </span>
-          <span>Built for hackathon demo &middot; not a substitute for emergency medical services</span>
+          <span>
+            Built for hackathon demo &middot; not a substitute for emergency
+            medical services
+          </span>
         </div>
       </footer>
     </>
