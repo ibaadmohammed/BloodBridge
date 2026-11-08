@@ -7,9 +7,9 @@ import Search from "./pages/Search.jsx";
 import Eligibility from "./pages/Eligibility.jsx";
 import Emergency from "./pages/Emergency.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import Analytics from "./components/Analytics";
-import BookAppointment from './pages/BookAppointment';
-import MyAppointments from './pages/MyAppointments';
+import Analytics from "./components/Analytics.jsx";
+import BookAppointment from "./pages/BookAppointment.js";
+import MyAppointments from "./pages/MyAppointments.js";
 
 export default function App() {
   return (
@@ -22,10 +22,10 @@ export default function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/emergency" element={<Emergency />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="*" element={<Home />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/book" element={<BookAppointment />} />
         <Route path="/appointments" element={<MyAppointments />} />
+        <Route path="*" element={<Home />} />
       </Routes>
       <footer>
         <div className="container">
