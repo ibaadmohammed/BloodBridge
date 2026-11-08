@@ -8,6 +8,8 @@ import Eligibility from "./pages/Eligibility.jsx";
 import Emergency from "./pages/Emergency.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Analytics from "./components/Analytics";
+import BookAppointment from './pages/BookAppointment';
+import MyAppointments from './pages/MyAppointments';
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<Home />} />
         <Route path="/analytics" element={<Analytics />} />
+        <Route path="/book" element={<BookAppointment />} />
+        <Route path="/appointments" element={<MyAppointments />} />
       </Routes>
       <footer>
         <div className="container">

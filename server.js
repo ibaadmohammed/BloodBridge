@@ -201,6 +201,9 @@ app.get("/api/bloodbanks", (req, res) => {
   res.json(db.bloodBanks);
 });
 
+// ================= APPOINTMENTS =================
+app.use("/api/appointments", require("./appointments"));
+
 // ================= DASHBOARD =================
 
 app.get("/api/stats", (req, res) => {
