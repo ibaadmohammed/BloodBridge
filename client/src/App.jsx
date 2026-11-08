@@ -8,8 +8,8 @@ import Eligibility from "./pages/Eligibility.jsx";
 import Emergency from "./pages/Emergency.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Analytics from "./components/Analytics.jsx";
-import BookAppointment from "./pages/BookAppointment.js";
-import MyAppointments from "./pages/MyAppointments.js";
+import BookAppointment from "./pages/BookAppointment";
+import MyAppointments from "./pages/MyAppointments";
 
 export default function App() {
   return (
