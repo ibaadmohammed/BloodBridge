@@ -1,10 +1,48 @@
+
+# Dependencies
 node_modules/
-npm-debug.log*
+**/node_modules/
+
+# Environment variables and secrets
 .env
-.env.local
-.DS_Store
-*.log
-dist/
-client/node_modules/
-client/dist/
+.env.*
+!.env.example
+
+# Local database and private data
+data/db.json
 data/appointments.json
+**/data/db.json
+**/data/appointments.json
+
+# Build output
+dist/
+**/dist/
+build/
+coverage/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Python cache (if applicable)
+__pycache__/
+*.pyc
