@@ -1,124 +1,313 @@
-# 🩸 BloodBridge (React + Express)
+# 🩸 BloodBridge — Connecting Lives Through Blood Donation
 
-A platform that connects people who need blood with nearby eligible donors — React/Vite frontend, Express API backend.
+**BloodBridge** is a full-stack blood donation and emergency request management platform that connects patients and hospitals with nearby eligible blood donors. It simplifies donor discovery, blood request management, and donation appointment scheduling through a centralized platform.
 
-This is the React rewrite of the plain HTML/CSS/JS version, same features and same design system, now componentized with **React Router** for client-side navigation.
+Built with **React, Node.js, Express, and PostgreSQL**, BloodBridge aims to make blood donation coordination faster, more accessible, and more organized.
 
-## Features
+---
 
-- Blood group selection (register + request) — reusable `BloodGroupPicker` component
-- Location-based donor search with distance sorting
-- Emergency blood request with instant compatible-donor matching
-- Donor registration / profile
-- Available / unavailable status toggle
-- One-tap contact donor (`tel:` links)
-- Map showing nearby donors and blood banks (Leaflet, wrapped as a React component)
-- Dashboard with live requests, donations and blood-group availability
-- Urgent-request banner on the home page
-- Client-side routing (no full page reloads between Home / Search / Register / Emergency / Dashboard)
+## ✨ Key Features
 
-## Tech stack
+### 🧑‍🤝‍🧑 Donor Management
+- Register as a blood donor.
+- Manage donor profiles and contact information.
+- Update donor availability status.
+- Search for donors based on blood group and location.
+- Identify compatible donors using blood group compatibility rules.
 
-- **Backend:** Node.js + Express, JSON file storage (no DB setup required)
-- **Frontend:** React 18 + Vite + React Router, plain CSS (design tokens in `client/src/index.css`)
-- **Maps:** `leaflet` npm package, wrapped in `MapView.jsx`
-- Blood-type compatibility matrix (server-side) used to match donors to requests
+### 🚨 Emergency Blood Requests
+- Create urgent blood requests.
+- Select the required blood group and location.
+- Match requests with compatible donors.
+- Track blood request statuses.
+- Manage and update existing requests.
 
-## Project structure
+### 📅 Appointment Management
+- Schedule blood donation appointments.
+- View available appointment slots.
+- Book appointments at participating blood centers.
+- Cancel existing appointments.
+- Store appointment information in PostgreSQL.
 
+### 🗺️ Location-Based Discovery
+- Discover nearby donors and blood banks.
+- View locations through interactive maps.
+- Use geographical information to support donor discovery.
+
+### 📊 Dashboard & Statistics
+- View donor and blood request statistics.
+- Monitor blood group availability.
+- Track donation activity and requests.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| Frontend | React 18, Vite, JavaScript, CSS |
+| Backend | Node.js, Express.js |
+| Database | PostgreSQL |
+| Database Driver | node-postgres (`pg`) |
+| API Architecture | REST APIs |
+| Maps | Leaflet |
+| Development Tools | VS Code, Git, GitHub |
+| Package Management | npm |
+
+---
+
+## 🏗️ System Architecture
+
+BloodBridge follows a client-server architecture.
+
+```text
+          USER
+           |
+           v
+   React Frontend (Vite)
+           |
+           | HTTP Requests
+           v
+     Express.js Backend
+           |
+           | REST APIs
+           v
+    PostgreSQL Database
+           |
+           v
+   Stored Application Data
 ```
+
+**How it works:**
+
+1. Users interact with the React frontend.
+2. The frontend sends HTTP requests to the Express backend.
+3. Express processes requests through REST API endpoints.
+4. The backend communicates with PostgreSQL using the `pg` library.
+5. Database results are returned to the frontend as JSON responses.
+
+---
+
+## 📁 Project Structure
+
+```text
 BloodBridge/
-├── server.js               # Express API (same endpoints as the vanilla version)
-├── package.json              # root: orchestrates server + client via `concurrently`
-├── data/db.json                # seed + persisted data
-├── dist/                         # created by `npm run build` — Express serves this in production
-└── client/                        # Vite React app
-    ├── package.json
-    ├── vite.config.js                # dev proxy /api -> :3000, build outDir ../dist
-    ├── index.html
-    └── src/
-        ├── main.jsx                    # mounts <App/>, router + toast provider
-        ├── App.jsx                       # routes
-        ├── api.js                         # fetch wrapper
-        ├── index.css                       # design system (shared with vanilla version)
-        ├── lib/helpers.js                    # city coords, blood groups, timeAgo
-        ├── components/
-        │   ├── Navbar.jsx
-        │   ├── Toast.jsx                        # context + component
-        │   ├── BloodGroupPicker.jsx
-        │   ├── DonorRow.jsx
-        │   ├── RequestRow.jsx
-        │   └── MapView.jsx                        # Leaflet wrapped as a component
-        └── pages/
-            ├── Home.jsx
-            ├── Register.jsx
-            ├── Search.jsx
-            ├── Emergency.jsx
-            └── Dashboard.jsx
+│
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── lib/
+│   │   ├── App.jsx
+│   │   ├── api.js
+│   │   ├── main.jsx
+│   │   └── index.css
+│   │
+│   ├── package.json
+│   ├── package-lock.json
+│   └── vite.config.js
+│
+├── data/
+│   └── (local development data, excluded from Git)
+│
+├── server.js
+├── appointments.js
+├── eligibility.js
+├── db.js
+├── BloodBridge-schema.sql
+├── migrate-json-to-sql.js
+├── test-db.js
+│
+├── .env.example
+├── .gitignore
+├── package.json
+└── README.md
 ```
 
-## Run it (development)
+---
 
-Two ways:
+## ⚙️ Installation & Setup
 
-**Option A — one command, both servers:**
+Follow these steps to run BloodBridge locally.
+
+### 1. Clone the Repository
+
 ```bash
-npm run install:all   # installs root + client dependencies
-npm run dev            # runs Express (:3000) and Vite (:5173) together
+git clone https://github.com/ibaadmohammed/BloodBridge.git
+cd BloodBridge
 ```
-Open **http://localhost:5173** (Vite dev server; it proxies `/api` calls to Express on :3000).
 
-**Option B — separate terminals** (useful if you want separate log output):
+### 2. Install Dependencies
+
+Install backend dependencies:
+
 ```bash
-# terminal 1
 npm install
-npm run dev:server        # Express on :3000
-
-# terminal 2
-cd client && npm install
-npm run dev                 # Vite on :5173
 ```
 
-## Run it (production-style build)
+Install frontend dependencies:
 
 ```bash
-npm run install:all
-npm run build     # builds the React app into ../dist
-npm start           # Express serves the built app + API from a single port
+cd client
+npm install
+cd ..
 ```
-Open **http://localhost:3000** — Express now serves the compiled React app directly, no separate Vite server needed.
 
-## Opening in Antigravity / VS Code
+### 3. Configure PostgreSQL
 
-1. Open the **`BloodBridge`** folder itself as the workspace root.
-2. Run `npm run install:all` in the integrated terminal.
-3. Use **Run and Debug** → **"Run Full App (server + client)"** — this is a compound launch config that starts the Express server *with the debugger attached* (breakpoints work in `server.js`) alongside the Vite dev server in a terminal.
-   - Or just run `npm run dev` from the terminal — same effect, no debugger attached.
-4. Open `http://localhost:5173`.
+Make sure PostgreSQL is installed and running.
 
-Included editor config:
-- `.vscode/launch.json` — debug config for the server, plus a compound to launch both server and client together
-- `.vscode/settings.json` — 2-space indent, format-on-save, excludes both `node_modules` folders and `dist`
-- `.vscode/extensions.json` — recommends Prettier, ESLint, REST Client
-- `.editorconfig`, `.gitignore` — consistent formatting, clean git status across the two-project layout
+Create a database named:
 
-## API reference
+```sql
+CREATE DATABASE "BloodBridge";
+```
 
-Same as the vanilla version — see `server.js`. Quick summary:
+Open the `BloodBridge-schema.sql` file and execute its SQL statements against the newly created database.
 
-| Method | Endpoint           | Description                                                    |
-|--------|---------------------|------------------------------------------------------------------|
-| GET    | `/api/donors`        | List donors (filters: bloodGroup, status, lat, lng, radius)       |
-| POST   | `/api/donors`         | Register a donor                                                    |
-| PATCH  | `/api/donors/:id`      | Update a donor (e.g. toggle status)                                   |
-| GET    | `/api/requests`         | List blood requests (filters: status, urgency)                          |
-| POST   | `/api/requests`          | Create a request; returns matched donors                                  |
-| PATCH  | `/api/requests/:id`       | Update a request (e.g. mark fulfilled)                                      |
-| GET    | `/api/bloodbanks`          | List seeded blood banks                                                       |
-| GET    | `/api/stats`                 | Dashboard aggregate stats                                                       |
+### 4. Configure Environment Variables
 
-## Notes
+Create a `.env` file in the project root.
 
-- The blood-compatibility matrix is the standard simplified ABO/Rh model — fine for a hackathon demo, not a substitute for real medical cross-matching.
-- City → coordinates is a hardcoded lookup table for the demo, not real geocoding.
-- `React.StrictMode` double-invokes effects in dev; `MapView.jsx` guards against creating the Leaflet map twice.
+Use `.env.example` as a reference:
+
+```env
+DB_USER=postgres
+DB_HOST=localhost
+DB_NAME=BloodBridge
+DB_PASSWORD=your_postgres_password
+DB_PORT=5432
+```
+
+Replace the placeholder values with your local PostgreSQL credentials.
+
+**Important:** Never commit your `.env` file or database credentials to GitHub.
+
+### 5. Test the Database Connection
+
+Run:
+
+```bash
+node test-db.js
+```
+
+This checks whether the backend can connect to PostgreSQL.
+
+### 6. Start the Backend
+
+From the project root:
+
+```bash
+npm start
+```
+
+The Express backend runs on:
+
+```text
+http://localhost:3000
+```
+
+### 7. Start the Frontend
+
+Open another terminal:
+
+```bash
+cd client
+npm run dev
+```
+
+Open the application at:
+
+```text
+http://localhost:5173
+```
+
+---
+
+## 🗄️ Database
+
+BloodBridge uses **PostgreSQL** for persistent application data.
+
+The database schema is provided in `BloodBridge-schema.sql`.
+
+The application uses database tables for managing information such as:
+
+- Donor directory
+- Blood requests
+- Blood banks
+- Donation appointments
+
+The backend uses the `pg` package and a connection pool configured in `db.js`.
+
+### Legacy Data Migration
+
+A migration script is included to transfer existing JSON-based application data into PostgreSQL.
+
+```bash
+node migrate-json-to-sql.js
+```
+
+Run this only after configuring the database and executing the schema.
+
+---
+
+## 🔌 REST API
+
+The Express backend exposes REST API endpoints for communication between the frontend and database.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/donors` | Retrieve donor information |
+| POST | `/api/donors` | Register a new donor |
+| PATCH | `/api/donors/:id` | Update donor information |
+| GET | `/api/requests` | Retrieve blood requests |
+| POST | `/api/requests` | Create a blood request |
+| PATCH | `/api/requests/:id` | Update a blood request |
+| GET | `/api/bloodbanks` | Retrieve blood bank information |
+| GET | `/api/stats` | Retrieve dashboard statistics |
+| GET | `/api/appointments/slots` | Retrieve available appointment slots |
+
+Appointment booking and cancellation are also handled through the appointments API.
+
+---
+
+## 🔐 Security & Data Handling
+
+- Database credentials are configured through environment variables.
+- `.env` and local donor data files are excluded using `.gitignore`.
+- PostgreSQL provides persistent relational data storage.
+- Backend APIs handle database operations instead of exposing database credentials to the frontend.
+
+---
+
+## 🚀 Future Enhancements
+
+- JWT-based authentication and role-based authorization.
+- Email and SMS notifications for emergency blood requests.
+- Real-time notifications for compatible donors.
+- Advanced donor matching based on distance and availability.
+- Hospital and donor verification.
+- Improved analytics and reporting.
+- Cloud database deployment.
+
+---
+
+## ⚠️ Disclaimer
+
+BloodBridge is an academic and development project intended to demonstrate blood donation coordination and full-stack application development.
+
+Blood group compatibility logic is simplified for application-level matching. It must not replace professional medical evaluation, laboratory testing, or clinical cross-matching.
+
+---
+
+## 👨‍💻 Developer
+
+**Ibaad Mohammed**
+
+- GitHub: [@ibaadmohammed](https://github.com/ibaadmohammed)
+- Project: [BloodBridge](https://github.com/ibaadmohammed/BloodBridge)
+
+---
+
+**BloodBridge — Every Donation Can Save a Life. ❤️**
+inst creating the Leaflet map twice.
