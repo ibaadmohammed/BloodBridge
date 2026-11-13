@@ -14,9 +14,7 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^18.0.10",
-    "express": "^4.19.2",
-    "pg": "^8.23.1"
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
