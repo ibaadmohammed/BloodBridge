@@ -51,7 +51,7 @@ Built with **React, Node.js, Express, and PostgreSQL**, BloodBridge aims to make
 | Database Driver | node-postgres (`pg`) |
 | API Architecture | REST APIs |
 | Maps | Leaflet |
-| Development Tools | VS Code, Git, GitHub |
+| Development Tools | Antigravity, Git, GitHub |
 | Package Management | npm |
 
 ---
