@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Analytics from "./components/Analytics";
 import BookAppointment from "./pages/BookAppointment.tsx";
 import MyAppointments from "./pages/MyAppointments.tsx";
+import BloodBridgeChat from "./components/BloodBridgeChat.jsx";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="/book" element={<BookAppointment />} />
         <Route path="/appointments" element={<MyAppointments />} />
       </Routes>
+      <BloodBridgeChat />
       <footer>
         <div className="container">
           <span>
