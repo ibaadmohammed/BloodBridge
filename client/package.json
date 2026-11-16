@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@n8n/chat": "^1.46.5",
     "chart.js": "^4.6.1",
     "leaflet": "^1.9.4",
     "react": "^18.3.1",
