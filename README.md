@@ -1,134 +1,140 @@
-# 🩸 BloodBridge — Connecting Lives Through Blood Donation
+# 🩸 BloodBridge – Smart Blood Donation & Management Platform
 
-**BloodBridge** is a full-stack blood donation and emergency request management platform that connects patients and hospitals with nearby eligible blood donors. It simplifies donor discovery, blood request management, and donation appointment scheduling through a centralized platform.
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![Chart.js](https://img.shields.io/badge/Chart.js-Analytics-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://www.chartjs.org/)
+[![Leaflet](https://img.shields.io/badge/Leaflet-Maps-199900?style=for-the-badge&logo=leaflet&logoColor=white)](https://leafletjs.com/)
+[![Neon](https://img.shields.io/badge/Neon-Serverless_Postgres-00E599?style=for-the-badge&logo=neon&logoColor=black)](https://neon.tech/)
 
-Built with **React, Node.js, Express, and PostgreSQL**, BloodBridge aims to make blood donation coordination faster, more accessible, and more organized.
+**BloodBridge** is a smart blood donation and management platform designed to connect blood donors, patients, hospitals, and blood banks through a centralized digital system.
+
+The platform simplifies donor discovery, emergency blood requests, appointment management, and blood-bank information while providing analytics and AI-powered assistance.
+
+🌐 **Live Website:** https://blood-bridge-kappa-lilac.vercel.app/
+
+🔗 **Backend API:** https://bloodbridge-6jwv.onrender.com/
 
 ---
 
 ## ✨ Key Features
 
-### 🧑‍🤝‍🧑 Donor Management
-- Register as a blood donor.
-- Manage donor profiles and contact information.
-- Update donor availability status.
-- Search for donors based on blood group and location.
-- Identify compatible donors using blood group compatibility rules.
+### 🩸 Donor Management
+- Browse and manage registered blood donors.
+- Search donors based on blood group and location.
+- View donor availability and donation information.
+- Track donor eligibility information.
 
 ### 🚨 Emergency Blood Requests
-- Create urgent blood requests.
-- Select the required blood group and location.
-- Match requests with compatible donors.
-- Track blood request statuses.
-- Manage and update existing requests.
+- Submit blood requests with patient and hospital details.
+- Specify blood group, required units, and urgency.
+- Track request statuses.
+- Manage emergency and regular blood requirements.
 
 ### 📅 Appointment Management
-- Schedule blood donation appointments.
+- Book blood donation appointments.
 - View available appointment slots.
-- Book appointments at participating blood centers.
 - Cancel existing appointments.
-- Store appointment information in PostgreSQL.
+- Enforce appointment capacity limits.
+- Apply a minimum 56-day interval between donations.
 
-### 🗺️ Location-Based Discovery
-- Discover nearby donors and blood banks.
-- View locations through interactive maps.
-- Use geographical information to support donor discovery.
+### 🏥 Blood Bank Directory
+- Browse 150 blood-bank directory entries.
+- View hospital and blood-bank locations.
+- Explore location information and contact details.
 
-### 📊 Dashboard & Statistics
-- View donor and blood request statistics.
-- Monitor blood group availability.
-- Track donation activity and requests.
+### 📊 Analytics Dashboard
+- Visualize donor and blood-request statistics.
+- View blood-group distribution.
+- Monitor donation and request information.
+- Explore interactive charts using Chart.js.
+
+### 🗺️ Interactive Maps
+- Explore donor and blood-bank locations.
+- Visualize geographical information.
+- Use interactive maps powered by Leaflet.
+
+### 🤖 AI-Powered Assistant
+- Integrated AI chatbot for user assistance.
+- Uses n8n Cloud workflows and Gemini AI.
+- Helps users interact with BloodBridge information.
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Layer | Technologies |
+| Category | Technologies |
 |---|---|
-| Frontend | React 18, Vite, JavaScript, CSS |
+| Frontend | React 18, JavaScript, HTML, CSS |
+| Build Tool | Vite |
 | Backend | Node.js, Express.js |
 | Database | PostgreSQL |
-| Database Driver | node-postgres (`pg`) |
-| API Architecture | REST APIs |
-| Maps | Leaflet |
-| Development Tools | Antigravity, Git, GitHub |
-| Package Management | npm |
+| Database Hosting | Neon |
+| ORM | Prisma |
+| Data Visualization | Chart.js, React Chart.js 2 |
+| Maps | Leaflet, React Leaflet |
+| AI Integration | Gemini AI, n8n Cloud |
+| Deployment | Vercel, Render |
 
 ---
 
-## 🏗️ System Architecture
-
-BloodBridge follows a client-server architecture.
-
-```text
-          USER
-           |
-           v
-   React Frontend (Vite)
-           |
-           | HTTP Requests
-           v
-     Express.js Backend
-           |
-           | REST APIs
-           v
-    PostgreSQL Database
-           |
-           v
-   Stored Application Data
-```
-
-**How it works:**
-
-1. Users interact with the React frontend.
-2. The frontend sends HTTP requests to the Express backend.
-3. Express processes requests through REST API endpoints.
-4. The backend communicates with PostgreSQL using the `pg` library.
-5. Database results are returned to the frontend as JSON responses.
-
----
-
-## 📁 Project Structure
+## 🏗️ Project Architecture
 
 ```text
 BloodBridge/
 │
-├── client/
+├── client/                  # React + Vite frontend
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
-│   │   ├── lib/
-│   │   ├── App.jsx
-│   │   ├── api.js
-│   │   ├── main.jsx
-│   │   └── index.css
-│   │
-│   ├── package.json
-│   ├── package-lock.json
-│   └── vite.config.js
+│   │   ├── services/
+│   │   └── ...
+│   └── package.json
 │
-├── data/
-│   └── (local development data, excluded from Git)
+├── prisma/
+│   ├── schema.prisma        # Prisma database schema
+│   └── bloodbridge-additive.sql
 │
-├── server.js
-├── appointments.js
-├── eligibility.js
-├── db.js
-├── BloodBridge-schema.sql
-├── migrate-json-to-sql.js
-├── test-db.js
+├── scripts/
+│   ├── import-bloodbanks.js
+│   ├── import-donors.js
+│   └── import-requests.js
 │
-├── .env.example
-├── .gitignore
+├── appointments.js          # Appointment API
+├── server.js                # Express backend
+├── prisma.config.ts         # Prisma configuration
 ├── package.json
 └── README.md
 ```
 
 ---
 
-## ⚙️ Installation & Setup
+## 🗄️ Database Architecture
 
-Follow these steps to run BloodBridge locally.
+BloodBridge uses **PostgreSQL hosted on Neon** with **Prisma ORM** for database access.
+
+The database manages:
+- Donor records
+- Blood requests
+- Blood groups
+- Blood-bank information
+- Donation appointments
+- Donation-related records
+
+Prisma provides structured database queries, schema management, and type-safe database access through Prisma Client.
+
+---
+
+## ⚙️ Installation and Setup
+
+### Prerequisites
+
+- Node.js 18.18.0 or later
+- npm
+- PostgreSQL database hosted on Neon
+- Git
 
 ### 1. Clone the Repository
 
@@ -139,175 +145,105 @@ cd BloodBridge
 
 ### 2. Install Dependencies
 
-Install backend dependencies:
-
 ```bash
-npm install
+npm run install:all
 ```
 
-Install frontend dependencies:
-
-```bash
-cd client
-npm install
-cd ..
-```
-
-### 3. Configure PostgreSQL
-
-Make sure PostgreSQL is installed and running.
-
-Create a database named:
-
-```sql
-CREATE DATABASE "BloodBridge";
-```
-
-Open the `BloodBridge-schema.sql` file and execute its SQL statements against the newly created database.
-
-### 4. Configure Environment Variables
+### 3. Configure Environment Variables
 
 Create a `.env` file in the project root.
 
-Use `.env.example` as a reference:
+Add your own Neon PostgreSQL connection strings:
 
 ```env
-DB_USER=postgres
-DB_HOST=localhost
-DB_NAME=BloodBridge
-DB_PASSWORD=your_postgres_password
-DB_PORT=5432
+DATABASE_URL="your_neon_pooled_connection_string"
+DATABASE_URL_UNPOOLED="your_neon_direct_connection_string"
 ```
 
-Replace the placeholder values with your local PostgreSQL credentials.
+Keep your credentials private. Never commit your `.env` file.
 
-**Important:** Never commit your `.env` file or database credentials to GitHub.
-
-### 5. Test the Database Connection
-
-Run:
+### 4. Generate Prisma Client
 
 ```bash
-node test-db.js
+npx prisma generate
 ```
 
-This checks whether the backend can connect to PostgreSQL.
+### 5. Start the Development Server
 
-### 6. Start the Backend
+```bash
+npm run dev
+```
 
-From the project root:
+The application runs with:
+- Express backend: `http://localhost:3000`
+- Vite frontend: `http://localhost:5173`
+
+### 6. Production Build
+
+```bash
+npm run build
+```
+
+This generates Prisma Client and builds the React frontend.
+
+### 7. Start Production Server
 
 ```bash
 npm start
 ```
 
-The Express backend runs on:
-
-```text
-http://localhost:3000
-```
-
-### 7. Start the Frontend
-
-Open another terminal:
-
-```bash
-cd client
-npm run dev
-```
-
-Open the application at:
-
-```text
-http://localhost:5173
-```
-
 ---
 
-## 🗄️ Database
-
-BloodBridge uses **PostgreSQL** for persistent application data.
-
-The database schema is provided in `BloodBridge-schema.sql`.
-
-The application uses database tables for managing information such as:
-
-- Donor directory
-- Blood requests
-- Blood banks
-- Donation appointments
-
-The backend uses the `pg` package and a connection pool configured in `db.js`.
-
-### Legacy Data Migration
-
-A migration script is included to transfer existing JSON-based application data into PostgreSQL.
-
-```bash
-node migrate-json-to-sql.js
-```
-
-Run this only after configuring the database and executing the schema.
-
----
-
-## 🔌 REST API
-
-The Express backend exposes REST API endpoints for communication between the frontend and database.
+## 📡 API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/donors` | Retrieve donor information |
-| POST | `/api/donors` | Register a new donor |
-| PATCH | `/api/donors/:id` | Update donor information |
+| GET | `/api/donors` | Retrieve donors |
+| POST | `/api/donors` | Register a donor |
 | GET | `/api/requests` | Retrieve blood requests |
 | POST | `/api/requests` | Create a blood request |
-| PATCH | `/api/requests/:id` | Update a blood request |
-| GET | `/api/bloodbanks` | Retrieve blood bank information |
+| GET | `/api/bloodbanks` | Retrieve blood banks |
 | GET | `/api/stats` | Retrieve dashboard statistics |
-| GET | `/api/appointments/slots` | Retrieve available appointment slots |
-
-Appointment booking and cancellation are also handled through the appointments API.
-
----
-
-## 🔐 Security & Data Handling
-
-- Database credentials are configured through environment variables.
-- `.env` and local donor data files are excluded using `.gitignore`.
-- PostgreSQL provides persistent relational data storage.
-- Backend APIs handle database operations instead of exposing database credentials to the frontend.
+| GET | `/api/appointments` | Retrieve appointments |
+| POST | `/api/appointments` | Book an appointment |
+| GET | `/api/appointments/slots` | Retrieve available slots |
+| PATCH | `/api/appointments/:id` | Update appointment status |
 
 ---
 
-## 🚀 Future Enhancements
+## 🚀 Deployment
 
-- JWT-based authentication and role-based authorization.
-- Email and SMS notifications for emergency blood requests.
-- Real-time notifications for compatible donors.
-- Advanced donor matching based on distance and availability.
-- Hospital and donor verification.
-- Improved analytics and reporting.
-- Cloud database deployment.
+| Component | Platform |
+|---|---|
+| Frontend | Vercel |
+| Backend | Render |
+| Database | Neon PostgreSQL |
+
+Configure the required database environment variables securely in your deployment platform.
 
 ---
 
-## ⚠️ Disclaimer
+## 🎯 Project Objective
 
-BloodBridge is an academic and development project intended to demonstrate blood donation coordination and full-stack application development.
+The primary objective of BloodBridge is to improve access to blood donation services by connecting donors and blood seekers through a centralized, accessible, and technology-driven platform.
 
-Blood group compatibility logic is simplified for application-level matching. It must not replace professional medical evaluation, laboratory testing, or clinical cross-matching.
+By combining modern web technologies, database management, geographical visualization, analytics, and AI assistance, BloodBridge aims to make blood donation coordination more efficient and accessible.
 
 ---
 
 ## 👨‍💻 Developer
 
-**Ibaad Mohammed**
+**Mohammed Mohtashim Ibaad**
 
 - GitHub: [@ibaadmohammed](https://github.com/ibaadmohammed)
-- Project: [BloodBridge](https://github.com/ibaadmohammed/BloodBridge)
+- Project Repository: [BloodBridge](https://github.com/ibaadmohammed/BloodBridge)
 
 ---
 
-**BloodBridge — Every Donation Can Save a Life. ❤️**
-inst creating the Leaflet map twice.
+## 📄 License
+
+This project is developed for educational and demonstration purposes.
+
+---
+
+**Built with ❤️ to connect blood donors and save lives.** 🩸
