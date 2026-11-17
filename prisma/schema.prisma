@@ -1,0 +1,487 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model addresses {
+  address_id   BigInt    @id @default(autoincrement())
+  user_id      BigInt?
+  hospital_id  BigInt?
+  address_line String
+  city         String?   @db.VarChar(100)
+  state        String?   @db.VarChar(100)
+  postal_code  String?   @db.VarChar(15)
+  country      String?   @default("India") @db.VarChar(100)
+  latitude     Decimal?  @db.Decimal(10, 7)
+  longitude    Decimal?  @db.Decimal(10, 7)
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  users        users?    @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model appointment_status_history {
+  history_id      BigInt       @id @default(autoincrement())
+  appointment_id  BigInt
+  previous_status String?      @db.VarChar(30)
+  new_status      String       @db.VarChar(30)
+  changed_by      BigInt?
+  change_note     String?
+  changed_at      DateTime?    @default(now()) @db.Timestamp(6)
+  appointments    appointments @relation(fields: [appointment_id], references: [appointment_id], onDelete: Cascade, onUpdate: NoAction)
+  users           users?       @relation(fields: [changed_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model appointments {
+  appointment_id             BigInt                       @id @default(autoincrement())
+  donor_id                   BigInt?
+  hospital_id                BigInt?
+  appointment_date           DateTime                     @db.Date
+  appointment_time           DateTime                     @db.Time(6)
+  appointment_status         String?                      @default("scheduled") @db.VarChar(30)
+  donation_type              String?                      @default("whole_blood") @db.VarChar(30)
+  notes                      String?
+  created_at                 DateTime?                    @default(now()) @db.Timestamp(6)
+  updated_at                 DateTime?                    @default(now()) @db.Timestamp(6)
+  public_id                  String                       @unique(map: "appointments_public_id_uidx") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  center_external_id         String?
+  center_name                String?                      @db.VarChar(200)
+  donor_name                 String?                      @db.VarChar(80)
+  phone                      String?                      @db.VarChar(20)
+  blood_group                String?                      @db.VarChar(3)
+  appointment_status_history appointment_status_history[]
+  donor_profiles             donor_profiles?              @relation(fields: [donor_id], references: [donor_id], onDelete: NoAction, onUpdate: NoAction)
+  hospitals                  hospitals?                   @relation(fields: [hospital_id], references: [hospital_id], onDelete: NoAction, onUpdate: NoAction)
+  donations                  donations?
+
+  @@index([appointment_date], map: "idx_appointments_date")
+  @@index([donor_id], map: "idx_appointments_donor")
+}
+
+model audit_logs {
+  log_id     BigInt    @id @default(autoincrement())
+  user_id    BigInt?
+  action     String    @db.VarChar(150)
+  table_name String?   @db.VarChar(100)
+  record_id  BigInt?
+  ip_address String?   @db.Inet
+  details    Json?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  users      users?    @relation(fields: [user_id], references: [user_id], onUpdate: NoAction)
+
+  @@index([created_at], map: "idx_audit_created")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model blood_bank_import_staging {
+  state      String?
+  district   String?
+  city       String?
+  name       String?
+  address    String?
+  pin        String?
+  phone      String?
+  helpline   String?
+  website    String?
+  category   String?
+  components String?
+  apheresis  String?
+  hours      String?
+  lat        String?
+  lon        String?
+
+  @@ignore
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model blood_components {
+  component_id        BigInt                @id @default(autoincrement())
+  component_name      String                @unique @db.VarChar(100)
+  description         String?
+  storage_days        Int?
+  blood_inventory     blood_inventory[]
+  blood_request_items blood_request_items[]
+  donations           donations[]
+}
+
+model blood_groups {
+  blood_group_id  BigInt            @id @default(autoincrement())
+  group_name      String            @unique @db.VarChar(3)
+  blood_inventory blood_inventory[]
+  blood_requests  blood_requests[]
+  donations       donations[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model blood_inventory {
+  inventory_id           BigInt                   @id @default(autoincrement())
+  hospital_id            BigInt
+  blood_group_id         BigInt
+  component_id           BigInt
+  units_available        Int?                     @default(0)
+  units_reserved         Int?                     @default(0)
+  collection_date        DateTime?                @db.Date
+  expiry_date            DateTime?                @db.Date
+  storage_location       String?                  @db.VarChar(100)
+  inventory_status       String?                  @default("available") @db.VarChar(30)
+  updated_at             DateTime?                @default(now()) @db.Timestamp(6)
+  blood_groups           blood_groups             @relation(fields: [blood_group_id], references: [blood_group_id], onDelete: NoAction, onUpdate: NoAction)
+  blood_components       blood_components         @relation(fields: [component_id], references: [component_id], onDelete: NoAction, onUpdate: NoAction)
+  hospitals              hospitals                @relation(fields: [hospital_id], references: [hospital_id], onDelete: NoAction, onUpdate: NoAction)
+  inventory_transactions inventory_transactions[]
+
+  @@index([blood_group_id], map: "idx_inventory_blood_group")
+  @@index([hospital_id], map: "idx_inventory_hospital")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model blood_request_items {
+  item_id          BigInt           @id @default(autoincrement())
+  request_id       BigInt
+  component_id     BigInt
+  units_requested  Int
+  units_fulfilled  Int?             @default(0)
+  blood_components blood_components @relation(fields: [component_id], references: [component_id], onDelete: NoAction, onUpdate: NoAction)
+  blood_requests   blood_requests   @relation(fields: [request_id], references: [request_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model blood_request_status_history {
+  history_id      BigInt         @id @default(autoincrement())
+  request_id      BigInt
+  previous_status String?        @db.VarChar(30)
+  new_status      String         @db.VarChar(30)
+  changed_by      BigInt?
+  change_note     String?
+  changed_at      DateTime?      @default(now()) @db.Timestamp(6)
+  users           users?         @relation(fields: [changed_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  blood_requests  blood_requests @relation(fields: [request_id], references: [request_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model blood_requests {
+  request_id                   BigInt                         @id @default(autoincrement())
+  requested_by                 BigInt?
+  hospital_id                  BigInt?
+  patient_name                 String                         @db.VarChar(150)
+  patient_age                  Int?
+  blood_group_id               BigInt
+  units_required               Int
+  urgency                      String?                        @default("normal") @db.VarChar(30)
+  request_status               String?                        @default("pending") @db.VarChar(30)
+  required_by                  DateTime?                      @db.Timestamp(6)
+  medical_reason               String?
+  contact_number               String?                        @db.VarChar(20)
+  created_at                   DateTime?                      @default(now()) @db.Timestamp(6)
+  updated_at                   DateTime?                      @default(now()) @db.Timestamp(6)
+  legacy_id                    String?                        @unique(map: "blood_requests_legacy_id_uidx")
+  hospital_name                String?                        @db.VarChar(200)
+  city                         String?                        @db.VarChar(100)
+  latitude                     Decimal?                       @db.Decimal(10, 7)
+  longitude                    Decimal?                       @db.Decimal(10, 7)
+  blood_request_items          blood_request_items[]
+  blood_request_status_history blood_request_status_history[]
+  blood_groups                 blood_groups                   @relation(fields: [blood_group_id], references: [blood_group_id], onDelete: NoAction, onUpdate: NoAction)
+  hospitals                    hospitals?                     @relation(fields: [hospital_id], references: [hospital_id], onDelete: NoAction, onUpdate: NoAction)
+  users                        users?                         @relation(fields: [requested_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([request_status], map: "idx_requests_status")
+  @@index([urgency], map: "idx_requests_urgency")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model campaign_registrations {
+  registration_id     BigInt         @id @default(autoincrement())
+  campaign_id         BigInt
+  donor_id            BigInt
+  registration_status String?        @default("registered") @db.VarChar(30)
+  registered_at       DateTime?      @default(now()) @db.Timestamp(6)
+  campaigns           campaigns      @relation(fields: [campaign_id], references: [campaign_id], onDelete: Cascade, onUpdate: NoAction)
+  donor_profiles      donor_profiles @relation(fields: [donor_id], references: [donor_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([campaign_id, donor_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model campaigns {
+  campaign_id            BigInt                   @id @default(autoincrement())
+  campaign_name          String                   @db.VarChar(200)
+  description            String?
+  organizer_id           BigInt?
+  hospital_id            BigInt?
+  venue                  String?
+  city                   String?                  @db.VarChar(100)
+  start_date             DateTime                 @db.Timestamp(6)
+  end_date               DateTime                 @db.Timestamp(6)
+  campaign_status        String?                  @default("upcoming") @db.VarChar(30)
+  created_at             DateTime?                @default(now()) @db.Timestamp(6)
+  campaign_registrations campaign_registrations[]
+  hospitals              hospitals?               @relation(fields: [hospital_id], references: [hospital_id], onDelete: NoAction, onUpdate: NoAction)
+  users                  users?                   @relation(fields: [organizer_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model donation_reactions {
+  reaction_id   BigInt    @id @default(autoincrement())
+  donation_id   BigInt
+  reaction_type String?   @db.VarChar(100)
+  severity      String?   @db.VarChar(30)
+  description   String?
+  reported_at   DateTime? @default(now()) @db.Timestamp(6)
+  action_taken  String?
+  donations     donations @relation(fields: [donation_id], references: [donation_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model donation_tests {
+  test_id       BigInt    @id @default(autoincrement())
+  donation_id   BigInt
+  test_name     String    @db.VarChar(150)
+  test_result   String?   @db.VarChar(100)
+  result_status String?   @default("pending") @db.VarChar(30)
+  tested_by     BigInt?
+  tested_at     DateTime? @default(now()) @db.Timestamp(6)
+  remarks       String?
+  donations     donations @relation(fields: [donation_id], references: [donation_id], onDelete: Cascade, onUpdate: NoAction)
+  users         users?    @relation(fields: [tested_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model donations {
+  donation_id        BigInt               @id @default(autoincrement())
+  appointment_id     BigInt?              @unique
+  donor_id           BigInt
+  hospital_id        BigInt
+  blood_group_id     BigInt
+  component_id       BigInt?
+  quantity_ml        Int?
+  donation_date      DateTime?            @default(now()) @db.Timestamp(6)
+  donation_status    String?              @default("collected") @db.VarChar(30)
+  collected_by       BigInt?
+  notes              String?
+  donation_reactions donation_reactions[]
+  donation_tests     donation_tests[]
+  appointments       appointments?        @relation(fields: [appointment_id], references: [appointment_id], onDelete: NoAction, onUpdate: NoAction)
+  blood_groups       blood_groups         @relation(fields: [blood_group_id], references: [blood_group_id], onDelete: NoAction, onUpdate: NoAction)
+  users              users?               @relation(fields: [collected_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  blood_components   blood_components?    @relation(fields: [component_id], references: [component_id], onDelete: NoAction, onUpdate: NoAction)
+  donor_profiles     donor_profiles       @relation(fields: [donor_id], references: [donor_id], onDelete: NoAction, onUpdate: NoAction)
+  hospitals          hospitals            @relation(fields: [hospital_id], references: [hospital_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([donor_id], map: "idx_donations_donor")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model donor_directory {
+  donor_id            BigInt    @id @default(autoincrement())
+  legacy_id           String    @unique
+  donor_name          String    @db.VarChar(150)
+  blood_group         String    @db.VarChar(3)
+  phone               String    @db.VarChar(20)
+  city                String    @db.VarChar(100)
+  latitude            Decimal?  @db.Decimal(10, 7)
+  longitude           Decimal?  @db.Decimal(10, 7)
+  availability_status String?   @default("available") @db.VarChar(30)
+  last_donation_date  DateTime? @db.Date
+  total_donations     Int?      @default(0)
+  gender              String?   @db.VarChar(20)
+  age                 Int?
+  weight_kg           Decimal?  @db.Decimal(5, 2)
+  state               String?   @db.VarChar(100)
+  registered_on       DateTime? @db.Date
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model donor_medical_screenings {
+  screening_id       BigInt         @id @default(autoincrement())
+  donor_id           BigInt
+  screening_date     DateTime?      @default(now()) @db.Timestamp(6)
+  hemoglobin         Decimal?       @db.Decimal(5, 2)
+  blood_pressure     String?        @db.VarChar(20)
+  temperature        Decimal?       @db.Decimal(4, 2)
+  medical_conditions String?
+  medications        String?
+  eligibility_status String?        @default("pending") @db.VarChar(30)
+  reviewed_by        BigInt?
+  notes              String?
+  donor_profiles     donor_profiles @relation(fields: [donor_id], references: [donor_id], onDelete: NoAction, onUpdate: NoAction)
+  users              users?         @relation(fields: [reviewed_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model donor_profiles {
+  donor_id                 BigInt                     @id @default(autoincrement())
+  user_id                  BigInt                     @unique
+  blood_group              String                     @db.VarChar(3)
+  weight_kg                Decimal?                   @db.Decimal(5, 2)
+  last_donation_date       DateTime?                  @db.Date
+  total_donations          Int?                       @default(0)
+  availability_status      String?                    @default("available") @db.VarChar(30)
+  preferred_donation_type  String?                    @db.VarChar(30)
+  created_at               DateTime?                  @default(now()) @db.Timestamp(6)
+  appointments             appointments[]
+  campaign_registrations   campaign_registrations[]
+  donations                donations[]
+  donor_medical_screenings donor_medical_screenings[]
+  users                    users                      @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  emergency_contacts       emergency_contacts[]
+
+  @@index([availability_status], map: "idx_donors_availability")
+  @@index([blood_group], map: "idx_donors_blood_group")
+}
+
+model emergency_contacts {
+  contact_id     BigInt         @id @default(autoincrement())
+  donor_id       BigInt
+  contact_name   String         @db.VarChar(150)
+  relationship   String?        @db.VarChar(50)
+  phone          String         @db.VarChar(20)
+  donor_profiles donor_profiles @relation(fields: [donor_id], references: [donor_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model hospital_staff {
+  staff_id    BigInt    @id @default(autoincrement())
+  hospital_id BigInt
+  user_id     BigInt
+  designation String?   @db.VarChar(100)
+  joined_at   DateTime? @default(now()) @db.Timestamp(6)
+  hospitals   hospitals @relation(fields: [hospital_id], references: [hospital_id], onDelete: NoAction, onUpdate: NoAction)
+  users       users     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([hospital_id, user_id])
+}
+
+model hospitals {
+  hospital_id         BigInt            @id @default(autoincrement())
+  hospital_name       String            @db.VarChar(200)
+  registration_number String?           @unique @db.VarChar(100)
+  email               String?           @db.VarChar(150)
+  phone               String?           @db.VarChar(20)
+  address             String
+  city                String?           @db.VarChar(100)
+  state               String?           @db.VarChar(100)
+  postal_code         String?           @db.VarChar(15)
+  latitude            Decimal?          @db.Decimal(10, 7)
+  longitude           Decimal?          @db.Decimal(10, 7)
+  is_verified         Boolean?          @default(false)
+  is_active           Boolean?          @default(true)
+  created_at          DateTime?         @default(now()) @db.Timestamp(6)
+  legacy_id           String?           @unique(map: "hospitals_legacy_id_uidx")
+  appointments        appointments[]
+  blood_inventory     blood_inventory[]
+  blood_requests      blood_requests[]
+  campaigns           campaigns[]
+  donations           donations[]
+  hospital_staff      hospital_staff[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model inventory_transactions {
+  transaction_id   BigInt          @id @default(autoincrement())
+  inventory_id     BigInt
+  transaction_type String          @db.VarChar(30)
+  quantity         Int
+  reference_note   String?
+  performed_by     BigInt?
+  transaction_date DateTime?       @default(now()) @db.Timestamp(6)
+  blood_inventory  blood_inventory @relation(fields: [inventory_id], references: [inventory_id], onDelete: NoAction, onUpdate: NoAction)
+  users            users?          @relation(fields: [performed_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model notification_preferences {
+  preference_id    BigInt    @id @default(autoincrement())
+  user_id          BigInt    @unique
+  email_enabled    Boolean?  @default(true)
+  sms_enabled      Boolean?  @default(true)
+  push_enabled     Boolean?  @default(true)
+  emergency_alerts Boolean?  @default(true)
+  updated_at       DateTime? @default(now()) @db.Timestamp(6)
+  users            users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model notifications {
+  notification_id   BigInt    @id @default(autoincrement())
+  user_id           BigInt
+  title             String    @db.VarChar(200)
+  message           String
+  notification_type String?   @db.VarChar(50)
+  is_read           Boolean?  @default(false)
+  created_at        DateTime? @default(now()) @db.Timestamp(6)
+  users             users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_notifications_user")
+}
+
+model roles {
+  role_id     BigInt  @id @default(autoincrement())
+  role_name   String  @unique @db.VarChar(50)
+  description String?
+  users       users[]
+}
+
+model system_settings {
+  setting_id    BigInt    @id @default(autoincrement())
+  setting_key   String    @unique @db.VarChar(150)
+  setting_value String?
+  description   String?
+  updated_at    DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model user_sessions {
+  session_id BigInt    @id @default(autoincrement())
+  user_id    BigInt
+  token_hash String
+  expires_at DateTime  @db.Timestamp(6)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  users      users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model users {
+  user_id                      BigInt                         @id @default(autoincrement())
+  role_id                      BigInt?
+  full_name                    String                         @db.VarChar(150)
+  email                        String                         @unique @db.VarChar(150)
+  phone                        String?                        @unique @db.VarChar(20)
+  password_hash                String
+  gender                       String?                        @db.VarChar(20)
+  date_of_birth                DateTime?                      @db.Date
+  is_verified                  Boolean?                       @default(false)
+  is_active                    Boolean?                       @default(true)
+  created_at                   DateTime?                      @default(now()) @db.Timestamp(6)
+  updated_at                   DateTime?                      @default(now()) @db.Timestamp(6)
+  addresses                    addresses[]
+  appointment_status_history   appointment_status_history[]
+  audit_logs                   audit_logs[]
+  blood_request_status_history blood_request_status_history[]
+  blood_requests               blood_requests[]
+  campaigns                    campaigns[]
+  donation_tests               donation_tests[]
+  donations                    donations[]
+  donor_medical_screenings     donor_medical_screenings[]
+  donor_profiles               donor_profiles?
+  hospital_staff               hospital_staff[]
+  inventory_transactions       inventory_transactions[]
+  notification_preferences     notification_preferences?
+  notifications                notifications[]
+  user_sessions                user_sessions[]
+  roles                        roles?                         @relation(fields: [role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([email], map: "idx_users_email")
+}
+
+model blood_banks {
+  blood_bank_id BigInt   @id @default(autoincrement())
+  legacy_id     String   @unique
+  bank_name     String   @db.VarChar(200)
+  city          String   @db.VarChar(100)
+  state         String?  @db.VarChar(100)
+  address       String?
+  latitude      Decimal? @db.Decimal(10, 7)
+  longitude     Decimal? @db.Decimal(10, 7)
+  phone         String?  @db.VarChar(20)
+
+  @@index([city], map: "idx_blood_banks_city")
+}
