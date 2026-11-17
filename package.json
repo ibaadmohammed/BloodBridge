@@ -23,7 +23,7 @@
     "prisma": "^6.19.3"
   },
   "engines": {
-    "node": ">=18.18.0"
+    "node": "22.x"
   },
   "allowScripts": {
     "prisma@6.19.3": true,
