@@ -8,3 +8,13 @@ dist/
 client/node_modules/
 client/dist/
 data/appointments.json
+
+/generated/prisma
+# Database credentials and local backups
+.neon
+bloodbridge-backup.sql
+
+# Prisma environment files
+.env.*
+!.env.example
+bloodbridge-neon-backup.dump
