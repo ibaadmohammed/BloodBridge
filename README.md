@@ -231,6 +231,25 @@ By combining modern web technologies, database management, geographical visualiz
 
 ---
 
+## Summary
+- Migrated backend database operations to Neon PostgreSQL.
+- Integrated Prisma ORM.
+- Migrated donors, blood requests, blood banks and appointments.
+- Added database import scripts.
+- Updated appointment booking and cancellation.
+- Migrated dashboard statistics to PostgreSQL.
+- Updated Node.js runtime to version 22.
+
+---
+
+## Testing
+- Local website tested successfully.
+- Prisma Client generation successful.
+- Production Vite build successful.
+- Appointment booking and cancellation tested.
+
+---
+
 ## 👨‍💻 Developer
 
 **Mohammed Mohtashim Ibaad**
