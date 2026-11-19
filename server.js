@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
@@ -14,6 +15,104 @@ const DIST_PATH = path.join(__dirname, "dist");
 const app = express();
 app.use(cors());
 app.use(express.json());
+let geminiClientPromise;
+
+function getGeminiClient() {
+  if (!geminiClientPromise) {
+    geminiClientPromise = import("@google/genai").then(
+      ({ GoogleGenAI }) =>
+        new GoogleGenAI({
+          apiKey: process.env.GEMINI_API_KEY,
+        }),
+    );
+  }
+
+  return geminiClientPromise;
+}
+
+const BLOODBRIDGE_INSTRUCTIONS = `
+You are BloodBridge AI, a helpful assistant for a blood donation platform.
+
+Help users with:
+- Blood donation eligibility and awareness.
+- Blood group compatibility.
+- Donor registration.
+- Appointment booking guidance.
+- Emergency blood requests.
+
+Guidelines:
+- Be friendly, concise and accurate.
+- Never invent donor availability or appointment slots.
+- Never claim to have booked an appointment.
+- Do not provide medical diagnoses.
+- Refer medical decisions to qualified healthcare professionals.
+- For emergencies, advise contacting a hospital immediately.
+`;
+
+// ================= GEMINI AI ASSISTANT =================
+
+app.post("/api/assistant/chat", async (req, res) => {
+  try {
+    const { message, history = [] } = req.body;
+
+    if (!message || typeof message !== "string" || !message.trim()) {
+      return res.status(400).json({
+        error: "Please enter a message.",
+      });
+    }
+
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({
+        error: "Gemini API key is not configured.",
+      });
+    }
+
+    // Reuse the Gemini client instead of creating one per request
+    const ai = await getGeminiClient();
+
+    // Keep only recent conversation history
+    const safeHistory = Array.isArray(history)
+      ? history
+          .filter(
+            (item) =>
+              ["user", "model"].includes(item.role) &&
+              typeof item.text === "string",
+          )
+          .slice(-8)
+          .map((item) => ({
+            role: item.role,
+            parts: [{ text: item.text.slice(0, 2000) }],
+          }))
+      : [];
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.8-flash",
+      contents: [
+        ...safeHistory,
+        {
+          role: "user",
+          parts: [{ text: message.trim().slice(0, 2000) }],
+        },
+      ],
+      config: {
+        systemInstruction: BLOODBRIDGE_INSTRUCTIONS,
+        maxOutputTokens: 512,
+        temperature: 0.4,
+      },
+    });
+
+    res.json({
+      reply:
+        response.text || "I couldn't generate a response. Please try again.",
+    });
+  } catch (error) {
+    console.error("Gemini Assistant Error:", error);
+
+    res.status(500).json({
+      error: "The AI assistant is temporarily unavailable. Please try again.",
+    });
+  }
+});
 
 // ---------- JSON database (currently used by dashboard stats) ----------
 function readDB() {
